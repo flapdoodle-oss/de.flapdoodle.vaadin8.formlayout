@@ -9,6 +9,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -29,25 +30,31 @@ public class DemoUI extends UI {
 	protected void init(VaadinRequest request) {
 		VerticalLayout all = new VerticalLayout();
 
+		Panel undefined = new Panel("undefinedSize", sampleForm());
+		undefined.setWidthUndefined();
+		all.addComponent(undefined);
+		all.addComponent(new Panel("fullSize", sampleForm()));
+		all.addComponent(fullSizeButton("outer"));
+
+		setContent(all);
+	}
+
+	private static FormLayout sampleForm() {
 		FormLayout formLayout = new FormLayout();
-		formLayout.setWidthUndefined();
-		// formLayout.setSizeFull();
 
 		formLayout.addComponent(new TextField("Name"));
 		formLayout.addComponent(new DateField("Birthday"));
+
 		TextField fullSizeTextField = new TextField("Full");
 		fullSizeTextField.setWidth(100, Unit.PERCENTAGE);
 		formLayout.addFullRowComponent(fullSizeTextField);
-		Button button = fullSizeButton("Help Me");
 
+		Button button = fullSizeButton("Help Me");
 		VerticalLayout vertical = new VerticalLayout(button);
 		vertical.setSizeFull();
 		formLayout.addFullRowComponent(vertical);
 
-		all.addComponent(formLayout);
-		all.addComponent(fullSizeButton("outer"));
-
-		setContent(all);
+		return formLayout;
 	}
 
 	private static Button fullSizeButton(String caption) {

@@ -45,6 +45,7 @@ import de.flapdoodle.vaadin8.client.form.FormLayoutState;
 import de.flapdoodle.vaadin8.client.form.VFormLayout;
 import de.flapdoodle.vaadin8.client.form.VFormLayout.Caption;
 import de.flapdoodle.vaadin8.client.form.VFormLayout.ErrorFlag;
+import de.flapdoodle.vaadin8.client.form.VFormLayout.FullSizeWidget;
 import de.flapdoodle.vaadin8.client.form.VFormLayout.VFormLayoutTable;
 
 /**
@@ -211,7 +212,11 @@ public class FormLayoutConnector extends AbstractLayoutConnector
 
 			if (getState().useFullRow.containsKey(child)) {
 				// make it full size
-				formLayoutTable.setFullRowChild(childId, childWidget);
+				FullSizeWidget fullSize = formLayoutTable.getFullSize(childWidget);
+				if (fullSize == null) {
+					fullSize = formLayout.new FullSizeWidget(child);
+				}
+				formLayoutTable.setFullRowChild(childId, fullSize);
 			} else {
 				formLayoutTable.setChild(childId, childWidget, caption, error);
 			}

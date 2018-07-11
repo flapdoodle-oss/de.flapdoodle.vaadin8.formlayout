@@ -99,6 +99,7 @@ public class VFormLayout extends SimplePanel {
 
 		private final Map<Widget, Caption> widgetToCaption = new HashMap<>();
 		private final Map<Widget, ErrorFlag> widgetToError = new HashMap<>();
+		private final Map<Widget, FullSizeWidget> widgetToFullSize = new HashMap<>();
 
 		public VFormLayoutTable() {
 			DOM.setElementProperty(getElement(), "cellPadding", "0");
@@ -211,8 +212,10 @@ public class VFormLayout extends SimplePanel {
 
 		}
 
-		public void setFullRowChild(int rowNr, Widget childWidget) {
+		public void setFullRowChild(int rowNr, FullSizeWidget childWidget) {
 			setWidget(rowNr, COLUMN_FULLSIZE_WIDGET, childWidget);
+
+			widgetToFullSize.put(childWidget, childWidget);
 		}
 
 		public Caption getCaption(Widget childWidget) {
@@ -223,10 +226,14 @@ public class VFormLayout extends SimplePanel {
 			return widgetToError.get(childWidget);
 		}
 
+		public FullSizeWidget getFullSize(Widget childWidget) {
+			return widgetToFullSize.get(childWidget);
+		}
+
 		public void cleanReferences(Widget oldChildWidget) {
 			widgetToError.remove(oldChildWidget);
 			widgetToCaption.remove(oldChildWidget);
-
+			widgetToFullSize.remove(oldChildWidget);
 		}
 
 		public void updateCaption(Widget widget, AbstractComponentState state,
@@ -244,6 +251,24 @@ public class VFormLayout extends SimplePanel {
 				e.updateError(errorMessage, errorLevel, hideErrors);
 			}
 
+		}
+	}
+
+	public class FullSizeWidget extends HTML {
+
+		private final ComponentConnector owner;
+
+		public FullSizeWidget(ComponentConnector component) {
+			super();
+			this.owner = component;
+
+			getElement().appendChild(owner.getWidget().getElement());
+
+			setWidth("100%");
+		}
+
+		public ComponentConnector getOwner() {
+			return owner;
 		}
 	}
 
